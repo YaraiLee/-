@@ -1,0 +1,57 @@
+一、使用 SELECT ... INTO OUTFILE 语句导出数据
+
+mysql> SELECT * FROM runoob_tbl 
+    -> INTO OUTFILE '/tmp/runoob.txt';
+	
+通过命令选项来设置数据输出的指定格式，以下实例为导出 CSV 格式：
+
+mysql> SELECT * FROM passwd INTO OUTFILE '/tmp/runoob.txt'
+    -> FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+    -> LINES TERMINATED BY '\r\n';
+	
+生成一个文件，各值用逗号隔开。这种格式可以被许多程序使用。
+
+SELECT a,b,a+b INTO OUTFILE '/tmp/result.text'
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM test_table;	
+
+二、导出表作为原始数据
+1、表创建和插入数据一并导出
+$ mysqldump -u root -p 数据库名 表名 > dump.sql  #mysqldump可以添加参数选择到处内容（如：-t/--no-create-info:不导出表创建 -d/--no-data:不导出数据插入内容 
+
+2、需要导出整个数据库的数据，可以使用以下命令：
+
+$ mysqldump -u root -p RUNOOB > database_dump.txt
+password ******
+
+3、如果需要备份所有数据库，可以使用以下命令：
+
+$ mysqldump -u root -p --all-databases > database_dump.txt
+
+三、将数据表及数据库拷贝至其他主机
+
+1、在源主机上执行以下命令，将数据备份至 dump.txt 文件中:
+
+$ mysqldump -u root -p database_name table_name > dump.txt
+password *****
+
+如果完整备份数据库，则无需使用特定的表名称。
+
+如果你需要将备份的数据库导入到MySQL服务器中，可以使用以下命令，使用以下命令你需要确认数据库已经创建：
+
+$ mysql -u root -p database_name < dump.txt
+password *****
+
+2、你也可以使用以下命令将导出的数据直接导入到远程的服务器上，但请确保两台服务器是相通的，是可以相互访问的：</p>
+$ mysqldump -u root -p database_name | mysql -h other-host.com database_name
+
+如果你需要将远程服务器的数据拷贝到本地，你也可以在 mysqldump 命令中指定远程服务器的IP、端口及数据库名。
+
+在源主机上执行以下命令，将数据备份到 dump.txt 文件中：
+
+请确保两台服务器是相通的：
+
+mysqldump -h other-host.com -P port -u root -p database_name > dump.txt  #-P port可以不加
+password ****
+	   
